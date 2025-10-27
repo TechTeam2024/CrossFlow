@@ -20,7 +20,7 @@ export default function Home({user, onLogout}){
     <div className="home-root">
       <header className="home-header">
         <div className="brand">
-          <h1 className="brand-title">Tech Tournament</h1>
+          <h1 className="brand-title">Tech-Tournament</h1>
           <p className="subtitle muted">Welcome, <strong>{user}</strong></p>
         </div>
         <div className="header-actions">
