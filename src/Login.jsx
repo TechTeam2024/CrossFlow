@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
 export default function Login({users, onLogin}){
-  const [username, setUsername] = useState(users?.[0]?.username || '')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
@@ -17,16 +17,14 @@ export default function Login({users, onLogin}){
       <form className="login-card glass-login" onSubmit={submit}>
           <h2>Sign in</h2>
           <label>Username</label>
-          <select value={username} onChange={e=>setUsername(e.target.value)}>
-            {users.map(u=> <option key={u.username} value={u.username}>{u.username}</option>)}
-          </select>
+          <input type="text" placeholder="user1" value={username} onChange={e=>setUsername(e.target.value)} />
           <label>Password</label>
           <input type="password" value={password} onChange={e=>setPassword(e.target.value)} />
           {error && <div className="error">{error}</div>}
           <div className="actions">
             <button className="btn primary" type="submit">Sign in</button>
           </div>
-          <p className="muted small">Demo accounts: passwords are <code>pass1</code>.. <code>pass50</code></p>
+    <p className="muted small">Demo accounts: usernames user1..user50, passwords pass1..pass50</p>
       </form>
     </div>
   )
