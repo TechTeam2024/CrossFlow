@@ -21,3 +21,4 @@ coverage/
 
 # Local build output
 build/
+.codesandbox/
