@@ -6,7 +6,7 @@ export default function Login({ onLogin, currentUser, onLogout }) {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
 
-    const STATIC_USER = ['temp1-11', 'temp4-2']
+    const STATIC_USER = ['temp1-11', 'temp4-2', 'temp2']
     const STATIC_PASS = 'secret'
 
     function submit(e) {

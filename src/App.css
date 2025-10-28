@@ -10,24 +10,22 @@
 
 html, body, #root {
   height: 100%;
-  width: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-  background: var(--bg);
+  background: var(--bg) !important;
   color: var(--white);
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* ensure root fills width */
 .app-root {
   min-height: 100vh;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  width: 100%;
+  background: var(--bg);
 }
 
 .app-header {
@@ -73,7 +71,7 @@ html, body, #root {
   padding: 0;
   width: 100%;
   max-width: 100%;
-  height: 100%;
+  min-height: calc(100vh - 120px); /* ensure main area is at least full viewport height minus header */
   margin: 0;
   flex: 1;
   /* allow page children to stretch full width; they can center their inner content */
@@ -81,6 +79,7 @@ html, body, #root {
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
+  background: var(--bg);
 }
 
 .page-center { 
@@ -88,10 +87,12 @@ html, body, #root {
   padding: 24px 16px; 
   width: 100%; 
   max-width: 100%;
+  min-height: calc(100vh - 120px); /* ensure page takes at least full viewport height */
   display: flex; 
   flex-direction: column; 
   align-items: center;
   box-sizing: border-box;
+  background: var(--bg);
 }
 
 /* make page containers occupy full available width and provide a comfortable max-width for wide screens */
@@ -128,6 +129,16 @@ html, body, #root {
 .login-form input { padding:8px 10px; margin-top:8px; width:100%; box-sizing:border-box; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color:var(--white); border-radius:6px; }
 
 /* iframe container: wide and centered, iframe taller horizontally than vertically */
+.crossword-page {
+  min-height: 120vh; /* ensure crossword page is taller than viewport */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px; /* add bottom padding for better spacing */
+  background: var(--bg);
+}
+
 .crossword-page .iframe-wrap {
   width: 100%;           /* occupy full available width */
   max-width: 1400px;    /* keep a comfortable max width on very large screens */
