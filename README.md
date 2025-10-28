@@ -1,45 +1,16 @@
-# Crossword React App (Dark Premium Theme)
+# React + Vite
 
-This project is a minimal Vite + React app that embeds a CrosswordLabs puzzle inside a premium, glassy dark theme. The first page is a translucent login box. After signing in, users land on the home page with two sections: Crossword (iframe) and Flowcharts (empty placeholder).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Quick start
+Currently, two official plugins are available:
 
-1. Install dependencies:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-```powershell
-npm install
-```
+## React Compiler
 
-2. Run the dev server:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```powershell
-npm run dev
-```
+## Expanding the ESLint configuration
 
-3. Open the URL printed by Vite (usually http://localhost:5173).
-
-Credentials
-
-- Demo users are in `users.json` (user1..user50 with passwords pass1..pass50).
-
-Notes
-
-- Each user receives a per-user iframe URL (query params appended). This may not guarantee server-side isolation depending on the embed provider.
-- The Flowcharts section is intentionally left empty for later work.
-# Crossword — Dark Theme Solver
-
-This is a simple single-page site designed to present a CrosswordLabs puzzle inside a comfortable dark-themed layout.
-
-Files:
-- `index.html` — main page with embedded iframe and controls
-- `styles.css` — dark theme styling and responsive layout
-- `script.js` — minimal interactions: open, copy link, fullscreen (F)
-
-How to use:
-1. Open `index.html` in your browser (double-click or serve with a simple static server).
-2. Use the buttons above the puzzle to open the puzzle in a new tab, copy the puzzle link, or toggle fullscreen.
-
-Notes:
-- The iframe embeds the provided puzzle at `https://crosswordlabs.com/embed/temp1-11`.
-- The site is intentionally minimal and works offline as a static HTML page.
-
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
