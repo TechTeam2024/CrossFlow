@@ -127,9 +127,22 @@ export const DiamondNode = memo(({ data, selected }) => {
 
   return (
     <div style={{ position: 'relative', width: '120px', height: '120px' }}>
-      {/* Connection handles */}
-      <Handle type="target" position={Position.Top} style={{ ...handleStyle, top: '15px' }} />
-      <Handle type="target" position={Position.Left} style={{ ...handleStyle, left: '15px' }} />
+      {/* Connection handles positioned ON the visual corners of the rotated diamond */}
+      {/* Top corner - outside the container */}
+      <Handle type="target" position={Position.Top} style={{ ...handleStyle, top: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
+      <Handle type="source" position={Position.Top} id="top-source" style={{ ...handleStyle, top: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
+      
+      {/* Left corner - outside the container */}
+      <Handle type="target" position={Position.Left} style={{ ...handleStyle, left: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
+      <Handle type="source" position={Position.Left} id="left-source" style={{ ...handleStyle, left: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
+      
+      {/* Bottom corner - outside the container */}
+      <Handle type="source" position={Position.Bottom} style={{ ...handleStyle, bottom: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
+      <Handle type="target" position={Position.Bottom} id="bottom-target" style={{ ...handleStyle, bottom: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
+      
+      {/* Right corner - outside the container */}
+      <Handle type="source" position={Position.Right} style={{ ...handleStyle, right: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
+      <Handle type="target" position={Position.Right} id="right-target" style={{ ...handleStyle, right: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
       
       <div style={{
         width: '100px',
@@ -144,6 +157,7 @@ export const DiamondNode = memo(({ data, selected }) => {
         alignItems: 'center',
         justifyContent: 'center',
         boxShadow: selected ? '0 0 20px rgba(255,138,0,0.5)' : '0 4px 6px rgba(0,0,0,0.3)',
+        zIndex: 1,
       }}>
         <div style={{ 
           transform: 'rotate(-45deg)',
@@ -156,9 +170,6 @@ export const DiamondNode = memo(({ data, selected }) => {
           />
         </div>
       </div>
-      
-      <Handle type="source" position={Position.Bottom} style={{ ...handleStyle, bottom: '15px' }} />
-      <Handle type="source" position={Position.Right} style={{ ...handleStyle, right: '15px' }} />
     </div>
   );
 });
@@ -196,9 +207,12 @@ export const CircleNode = memo(({ data, selected }) => (
 // Parallelogram/Input-Output Node
 export const ParallelogramNode = memo(({ data, selected }) => (
   <div style={{ position: 'relative' }}>
-    {/* Connection handles */}
-    <Handle type="target" position={Position.Top} style={handleStyle} />
-    <Handle type="target" position={Position.Left} style={handleStyle} />
+    {/* Connection handles - adjusted for skew transform */}
+    {/* Top handle - offset to the right to compensate for skew */}
+    <Handle type="target" position={Position.Top} style={{ ...handleStyle, left: '55%', zIndex: 10 }} />
+    
+    {/* Left handle - positioned higher to sit on the visible left edge after skew */}
+    <Handle type="target" position={Position.Left} style={{ ...handleStyle, top: '35%', zIndex: 10 }} />
     
     <div style={{
       background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
@@ -221,8 +235,11 @@ export const ParallelogramNode = memo(({ data, selected }) => (
       </div>
     </div>
     
-    <Handle type="source" position={Position.Bottom} style={handleStyle} />
-    <Handle type="source" position={Position.Right} style={handleStyle} />
+    {/* Bottom handle - offset to the left to compensate for skew */}
+    <Handle type="source" position={Position.Bottom} style={{ ...handleStyle, left: '45%', zIndex: 10 }} />
+    
+    {/* Right handle - positioned lower to sit on the visible right edge after skew */}
+    <Handle type="source" position={Position.Right} style={{ ...handleStyle, top: '65%', zIndex: 10 }} />
   </div>
 ));
 
