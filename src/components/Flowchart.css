@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 100px);
+  min-height: 800px;
   background: var(--bg);
   gap: 12px;
 }
@@ -137,6 +138,7 @@
 
 .reactflow-wrapper {
   flex: 1;
+  min-height: 600px;
   background: #0b0b0b;
   border: 2px solid rgba(255, 138, 0, 0.2);
   border-radius: 8px;

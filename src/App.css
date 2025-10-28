@@ -142,8 +142,8 @@ html, body, #root {
 /* iframe fills the wrap; use shorter height relative to width */
 .crossword-iframe {
   width: 100%;
-  height: 75vh;         /* width will be much larger than height on most screens */
-  min-height: 420px;    /* prevent too-small on tiny viewports */
+  height: 80vh;         /* width will be much larger than height on most screens */
+  min-height: 500px;    /* prevent too-small on tiny viewports */
   border: 3px solid var(--accent-2);
   display: block;
 }
@@ -158,10 +158,10 @@ html, body, #root {
 
 /* responsive adjustments */
 @media (max-width: 900px) {
-  .crossword-iframe { height: 52vh; }
+  .crossword-iframe { height: 70vh; min-height: 550px; }
   .login-box { width: 520px; max-width: 92%; }
 }
 @media (max-width: 480px) {
-  .crossword-iframe { height: 48vh; min-height: 300px; }
+  .crossword-iframe { height: 75vh; min-height: 600px; }
   .login-box { padding: 16px; }
 }

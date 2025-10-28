@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import './Login.css' // Import the CSS file for styling
+import './Login.css' 
 
 export default function Login({ onLogin, currentUser, onLogout }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
 
-    // static credentials
     const STATIC_USER = ['temp1-11', 'temp4-2']
     const STATIC_PASS = 'secret'
 
