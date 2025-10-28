@@ -74,6 +74,44 @@ export default function Flowchart() {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
+  // Wrap onNodesChange to sync position changes
+  const handleNodesChange = useCallback((changes) => {
+    onNodesChange(changes);
+    // Sync position changes with questionCanvases
+    const positionChanges = changes.filter(change => change.type === 'position' && change.dragging === false);
+    if (positionChanges.length > 0) {
+      setNodes((nds) => {
+        // Sync with questionCanvases
+        setQuestionCanvases(prev => {
+          const updated = [...prev];
+          updated[currentQuestion] = {
+            ...updated[currentQuestion],
+            nodes: nds
+          };
+          return updated;
+        });
+        return nds;
+      });
+    }
+  }, [onNodesChange, currentQuestion, setNodes]);
+
+  // Wrap onEdgesChange to sync edge changes
+  const handleEdgesChange = useCallback((changes) => {
+    onEdgesChange(changes);
+    setEdges((eds) => {
+      // Sync with questionCanvases
+      setQuestionCanvases(prev => {
+        const updated = [...prev];
+        updated[currentQuestion] = {
+          ...updated[currentQuestion],
+          edges: eds
+        };
+        return updated;
+      });
+      return eds;
+    });
+  }, [onEdgesChange, currentQuestion, setEdges]);
+
   // Navigate to next question
   const goToNextQuestion = useCallback(() => {
     if (currentQuestion < questions.length - 1) {
@@ -102,15 +140,15 @@ export default function Flowchart() {
           {
             ...params,
             type: 'smoothstep',
-            animated: true,
+            animated: false,
             markerEnd: {
               type: MarkerType.ArrowClosed,
-              width: 20,
-              height: 20,
+              width: 30,
+              height: 30,
               color: '#FF8A00',
             },
             style: {
-              strokeWidth: 2,
+              strokeWidth: 3,
               stroke: '#FF8A00',
             },
           },
@@ -134,6 +172,10 @@ export default function Flowchart() {
     const currentCounter = questionCanvases[currentQuestion].nodeIdCounter;
     const newNodeId = `${currentCounter}`;
     const defaultLabel = `${selectedNodeType.charAt(0).toUpperCase() + selectedNodeType.slice(1)} ${currentCounter}`;
+    
+    // Get the center of the viewport
+    const centerX = reactFlowInstance ? reactFlowInstance.getViewport().x : 250;
+    const centerY = reactFlowInstance ? reactFlowInstance.getViewport().y : 150;
     
     const newNode = {
       id: newNodeId,
@@ -161,24 +203,26 @@ export default function Flowchart() {
         },
       },
       position: {
-        x: Math.random() * 400 + 100,
-        y: Math.random() * 400 + 100,
+        x: Math.abs(centerX) + Math.random() * 100 + 150,
+        y: Math.abs(centerY) + Math.random() * 100 + 150,
       },
     };
 
-    setNodes((nds) => nds.concat(newNode));
-    
-    // Update the node counter for current question
-    setQuestionCanvases(prev => {
-      const updated = [...prev];
-      updated[currentQuestion] = {
-        ...updated[currentQuestion],
-        nodes: [...updated[currentQuestion].nodes, newNode],
-        nodeIdCounter: currentCounter + 1
-      };
-      return updated;
+    setNodes((nds) => {
+      const updatedNodes = nds.concat(newNode);
+      // Sync with questionCanvases immediately
+      setQuestionCanvases(prev => {
+        const updated = [...prev];
+        updated[currentQuestion] = {
+          ...updated[currentQuestion],
+          nodes: updatedNodes,
+          nodeIdCounter: currentCounter + 1
+        };
+        return updated;
+      });
+      return updatedNodes;
     });
-  }, [selectedNodeType, currentQuestion, questionCanvases, setNodes]);
+  }, [selectedNodeType, currentQuestion, questionCanvases, setNodes, reactFlowInstance]);
 
   const onNodesDelete = useCallback(
     (deleted) => {
@@ -393,8 +437,8 @@ export default function Flowchart() {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={handleEdgesChange}
           onConnect={onConnect}
           onNodesDelete={onNodesDelete}
           onEdgesDelete={onEdgesDelete}
@@ -403,7 +447,10 @@ export default function Flowchart() {
           nodeTypes={nodeTypes}
           deleteKeyCode={['Delete', 'Backspace']}
           multiSelectionKeyCode="Control"
-          fitView
+          connectionRadius={30}
+          connectionMode="loose"
+          snapToGrid={true}
+          snapGrid={[15, 15]}
           attributionPosition="bottom-left"
         >
           <Background color="#444" gap={16} />

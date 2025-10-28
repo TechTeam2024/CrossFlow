@@ -4,9 +4,11 @@ import { Handle, Position } from 'reactflow';
 // Common handle style
 const handleStyle = {
   background: '#FF8A00',
-  width: '10px',
-  height: '10px',
-  border: '2px solid white',
+  width: '14px',
+  height: '14px',
+  border: '3px solid white',
+  borderRadius: '50%',
+  cursor: 'crosshair',
 };
 
 // Text editor component
@@ -101,9 +103,9 @@ export const RectangleNode = memo(({ data, selected }) => (
       borderRadius: '8px',
       color: 'white',
       boxShadow: selected ? '0 0 20px rgba(255,138,0,0.5)' : '0 4px 6px rgba(0,0,0,0.3)',
-      padding: '10px 15px',
-      minWidth: '140px',
-      minHeight: '80px',
+      padding: '8px 12px',
+      minWidth: '100px',
+      minHeight: '60px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -124,14 +126,14 @@ export const DiamondNode = memo(({ data, selected }) => {
   const [text, setText] = useState(data?.label || '');
 
   return (
-    <div style={{ position: 'relative', width: '160px', height: '160px' }}>
+    <div style={{ position: 'relative', width: '120px', height: '120px' }}>
       {/* Connection handles */}
-      <Handle type="target" position={Position.Top} style={{ ...handleStyle, top: '20px' }} />
-      <Handle type="target" position={Position.Left} style={{ ...handleStyle, left: '20px' }} />
+      <Handle type="target" position={Position.Top} style={{ ...handleStyle, top: '15px' }} />
+      <Handle type="target" position={Position.Left} style={{ ...handleStyle, left: '15px' }} />
       
       <div style={{
-        width: '140px',
-        height: '140px',
+        width: '100px',
+        height: '100px',
         background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         border: selected ? '3px solid #FF8A00' : '2px solid #e04e5e',
         transform: 'rotate(45deg)',
@@ -145,7 +147,7 @@ export const DiamondNode = memo(({ data, selected }) => {
       }}>
         <div style={{ 
           transform: 'rotate(-45deg)',
-          width: '110px',
+          width: '80px',
           color: 'white',
         }}>
           <TextEditor 
@@ -155,8 +157,8 @@ export const DiamondNode = memo(({ data, selected }) => {
         </div>
       </div>
       
-      <Handle type="source" position={Position.Bottom} style={{ ...handleStyle, bottom: '20px' }} />
-      <Handle type="source" position={Position.Right} style={{ ...handleStyle, right: '20px' }} />
+      <Handle type="source" position={Position.Bottom} style={{ ...handleStyle, bottom: '15px' }} />
+      <Handle type="source" position={Position.Right} style={{ ...handleStyle, right: '15px' }} />
     </div>
   );
 });
@@ -173,8 +175,8 @@ export const CircleNode = memo(({ data, selected }) => (
       border: selected ? '3px solid #FF8A00' : '2px solid #3a9de8',
       borderRadius: '50%',
       color: 'white',
-      width: '140px',
-      height: '140px',
+      width: '100px',
+      height: '100px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -203,9 +205,9 @@ export const ParallelogramNode = memo(({ data, selected }) => (
       border: selected ? '3px solid #FF8A00' : '2px solid #f85e8a',
       transform: 'skew(-20deg)',
       color: 'white',
-      minWidth: '160px',
-      minHeight: '80px',
-      padding: '10px 15px',
+      minWidth: '110px',
+      minHeight: '60px',
+      padding: '8px 12px',
       boxShadow: selected ? '0 0 20px rgba(255,138,0,0.5)' : '0 4px 6px rgba(0,0,0,0.3)',
       display: 'flex',
       alignItems: 'center',

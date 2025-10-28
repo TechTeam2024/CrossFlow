@@ -73,6 +73,7 @@ html, body, #root {
   padding: 0;
   width: 100%;
   max-width: 100%;
+  height: 100%;
   margin: 0;
   flex: 1;
   /* allow page children to stretch full width; they can center their inner content */
@@ -131,6 +132,7 @@ html, body, #root {
   width: 100%;           /* occupy full available width */
   max-width: 1400px;    /* keep a comfortable max width on very large screens */
   margin: 18px auto;
+  height: 110vh;
   box-shadow: 0 8px 30px rgba(0,0,0,0.6);
   border-radius: 8px;
   overflow: hidden;
@@ -142,7 +144,7 @@ html, body, #root {
 /* iframe fills the wrap; use shorter height relative to width */
 .crossword-iframe {
   width: 100%;
-  height: 80vh;         /* width will be much larger than height on most screens */
+  height: 110vh;         /* width will be much larger than height on most screens */
   min-height: 500px;    /* prevent too-small on tiny viewports */
   border: 3px solid var(--accent-2);
   display: block;
