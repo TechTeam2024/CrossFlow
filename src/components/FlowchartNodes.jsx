@@ -128,21 +128,38 @@ export const DiamondNode = memo(({ data, selected }) => {
   return (
     <div style={{ position: 'relative', width: '120px', height: '120px' }}>
       {/* Connection handles positioned ON the visual corners of the rotated diamond */}
-      {/* Top corner - outside the container */}
-      <Handle type="target" position={Position.Top} style={{ ...handleStyle, top: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
-      <Handle type="source" position={Position.Top} id="top-source" style={{ ...handleStyle, top: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
+      {/* Each handle can be both source and target */}
+      <Handle 
+        type="source" 
+        position={Position.Top} 
+        id="top"
+        style={{ ...handleStyle, top: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} 
+        isConnectable={true}
+      />
       
-      {/* Left corner - outside the container */}
-      <Handle type="target" position={Position.Left} style={{ ...handleStyle, left: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
-      <Handle type="source" position={Position.Left} id="left-source" style={{ ...handleStyle, left: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
+      <Handle 
+        type="source" 
+        position={Position.Left} 
+        id="left"
+        style={{ ...handleStyle, left: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} 
+        isConnectable={true}
+      />
       
-      {/* Bottom corner - outside the container */}
-      <Handle type="source" position={Position.Bottom} style={{ ...handleStyle, bottom: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
-      <Handle type="target" position={Position.Bottom} id="bottom-target" style={{ ...handleStyle, bottom: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        id="bottom"
+        style={{ ...handleStyle, bottom: '-8px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }} 
+        isConnectable={true}
+      />
       
-      {/* Right corner - outside the container */}
-      <Handle type="source" position={Position.Right} style={{ ...handleStyle, right: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
-      <Handle type="target" position={Position.Right} id="right-target" style={{ ...handleStyle, right: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} />
+      <Handle 
+        type="source" 
+        position={Position.Right} 
+        id="right"
+        style={{ ...handleStyle, right: '-8px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }} 
+        isConnectable={true}
+      />
       
       <div style={{
         width: '100px',

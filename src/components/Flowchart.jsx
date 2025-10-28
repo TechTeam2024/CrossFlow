@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -8,7 +8,9 @@ import ReactFlow, {
   addEdge,
   MarkerType,
   Panel,
+  useReactFlow,
 } from 'reactflow';
+import { toPng } from 'html-to-image';
 import 'reactflow/dist/style.css';
 import './Flowchart.css';
 
@@ -73,6 +75,39 @@ export default function Flowchart() {
   const [selectedElements, setSelectedElements] = useState([]);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  // Custom keyboard handler to only delete edges, not nodes
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Delete' || event.key === 'Backspace') {
+        event.preventDefault();
+        
+        // Only delete edges, not nodes
+        const selectedEdges = selectedElements.filter(el => el.source !== undefined);
+        if (selectedEdges.length > 0) {
+          setEdges((eds) => {
+            const filtered = eds.filter((edge) => !selectedEdges.find((sel) => sel.id === edge.id));
+            // Sync with questionCanvases
+            setQuestionCanvases(prev => {
+              const updated = [...prev];
+              updated[currentQuestion] = {
+                ...updated[currentQuestion],
+                edges: filtered
+              };
+              return updated;
+            });
+            return filtered;
+          });
+          setSelectedElements([]);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedElements, setEdges, currentQuestion]);
 
   // Wrap onNodesChange to sync position changes
   const handleNodesChange = useCallback((changes) => {
@@ -270,14 +305,20 @@ export default function Flowchart() {
     const selectedNodes = selectedElements.filter(el => el.type !== undefined);
     const selectedEdges = selectedElements.filter(el => el.source !== undefined);
     
-    if (selectedNodes.length > 0 || selectedEdges.length > 0) {
-      if (window.confirm(`Delete ${selectedNodes.length} node(s) and ${selectedEdges.length} edge(s)?`)) {
-        if (selectedNodes.length > 0) {
-          setNodes((nds) => nds.filter((node) => !selectedNodes.find((sel) => sel.id === node.id)));
-        }
-        if (selectedEdges.length > 0) {
-          setEdges((eds) => eds.filter((edge) => !selectedEdges.find((sel) => sel.id === edge.id)));
-        }
+    // Only delete edges if edges are selected (don't delete connected nodes)
+    if (selectedEdges.length > 0) {
+      setEdges((eds) => eds.filter((edge) => !selectedEdges.find((sel) => sel.id === edge.id)));
+      setSelectedElements([]); // Clear selection after deleting edges
+    } 
+    // Only delete nodes if explicitly selected (and there are no edges selected)
+    else if (selectedNodes.length > 0) {
+      if (window.confirm(`Delete ${selectedNodes.length} node(s)?`)) {
+        setNodes((nds) => nds.filter((node) => !selectedNodes.find((sel) => sel.id === node.id)));
+        // Also delete edges connected to these nodes
+        setEdges((eds) => eds.filter((edge) => 
+          !selectedNodes.find((sel) => sel.id === edge.source || sel.id === edge.target)
+        ));
+        setSelectedElements([]);
       }
     } else {
       alert('No elements selected. Click on a node or edge to select it first.');
@@ -301,21 +342,45 @@ export default function Flowchart() {
   }, [currentQuestion, setNodes, setEdges]);
 
   const downloadFlowchart = useCallback(() => {
-    const allData = {
-      questions: questions.map((q, idx) => ({
-        question: q,
-        canvas: questionCanvases[idx]
-      }))
-    };
-    const dataStr = JSON.stringify(allData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'flowchart-questions.json';
-    link.click();
-    URL.revokeObjectURL(url);
-  }, [questionCanvases]);
+    if (reactFlowWrapper.current === null) {
+      return;
+    }
+
+    // Hide controls and minimap for cleaner export
+    const controls = reactFlowWrapper.current.querySelector('.react-flow__controls');
+    const minimap = reactFlowWrapper.current.querySelector('.react-flow__minimap');
+    const panel = reactFlowWrapper.current.querySelector('.react-flow__panel');
+    
+    if (controls) controls.style.display = 'none';
+    if (minimap) minimap.style.display = 'none';
+    if (panel) panel.style.display = 'none';
+
+    toPng(reactFlowWrapper.current, {
+      backgroundColor: '#1a1a1a',
+      width: reactFlowWrapper.current.offsetWidth,
+      height: reactFlowWrapper.current.offsetHeight,
+    })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `flowchart-question-${currentQuestion + 1}.png`;
+        link.href = dataUrl;
+        link.click();
+        
+        // Restore controls and minimap
+        if (controls) controls.style.display = 'block';
+        if (minimap) minimap.style.display = 'block';
+        if (panel) panel.style.display = 'block';
+      })
+      .catch((error) => {
+        console.error('Error exporting flowchart:', error);
+        alert('Failed to export flowchart. Please try again.');
+        
+        // Restore controls and minimap even on error
+        if (controls) controls.style.display = 'block';
+        if (minimap) minimap.style.display = 'block';
+        if (panel) panel.style.display = 'block';
+      });
+  }, [reactFlowWrapper, currentQuestion]);
 
   const uploadFlowchart = useCallback(() => {
     const input = document.createElement('input');
@@ -360,11 +425,9 @@ export default function Flowchart() {
           <button onClick={deleteSelected} className="action-btn danger" title="Delete selected">
             ❌ Delete Selected
           </button>
-          <button onClick={uploadFlowchart} className="action-btn" title="Upload flowchart">
-            📂 Load
-          </button>
-          <button onClick={downloadFlowchart} className="action-btn" title="Download flowchart">
-            💾 Save
+          
+          <button onClick={downloadFlowchart} className="action-btn" title="Save as PNG image">
+            💾 Save PNG
           </button>
           <button onClick={clearCanvas} className="action-btn danger" title="Clear canvas">
             🗑️ Clear All
@@ -445,7 +508,7 @@ export default function Flowchart() {
           onSelectionChange={onSelectionChange}
           onInit={setReactFlowInstance}
           nodeTypes={nodeTypes}
-          deleteKeyCode={['Delete', 'Backspace']}
+          deleteKeyCode={null}
           multiSelectionKeyCode="Control"
           connectionRadius={30}
           connectionMode="loose"
