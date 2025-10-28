@@ -1,24 +1,24 @@
-node_modules/
-dist/
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.DS_Store
-.vercel/
-.cache/
-.idea/
-.vscode/
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
-.pnp/
-.pnp.js
-coverage/
-/.parcel-cache
+pnpm-debug.log*
+lerna-debug.log*
 
-# Local build output
-build/
-.codesandbox/
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

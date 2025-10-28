@@ -1,0 +1,416 @@
+.flowchart-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 140px);
+  background: var(--bg);
+  gap: 12px;
+}
+
+.flowchart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flowchart-header h2 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 24px;
+}
+
+.flowchart-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  background: rgba(255, 138, 0, 0.1);
+  border: 1px solid rgba(255, 138, 0, 0.3);
+  color: var(--accent-2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.action-btn:hover {
+  background: rgba(255, 138, 0, 0.2);
+  border-color: rgba(255, 138, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.action-btn.danger:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+  color: #ff5555;
+}
+
+.flowchart-toolbar {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+  background: rgba(36, 24, 16, 0.6);
+  border: 1px solid rgba(255, 138, 0, 0.15);
+  border-radius: 8px;
+  margin: 0 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.toolbar-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.toolbar-label {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.shape-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.shape-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(246, 200, 76, 0.3);
+  transform: translateY(-1px);
+}
+
+.shape-btn.active {
+  background: linear-gradient(180deg, rgba(246, 200, 76, 0.2), rgba(255, 138, 0, 0.1));
+  border-color: rgba(246, 200, 76, 0.5);
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(246, 200, 76, 0.3);
+}
+
+.shape-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.shape-label {
+  font-size: 12px;
+}
+
+.add-node-btn {
+  background: linear-gradient(135deg, rgba(255, 138, 0, 0.8), rgba(246, 200, 76, 0.8));
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 138, 0, 0.4);
+  white-space: nowrap;
+}
+
+.add-node-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.6);
+}
+
+.reactflow-wrapper {
+  flex: 1;
+  background: #0b0b0b;
+  border: 2px solid rgba(255, 138, 0, 0.2);
+  border-radius: 8px;
+  margin: 0 16px 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Override React Flow default styles */
+.react-flow {
+  background: #0b0b0b;
+}
+
+.react-flow__node {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.react-flow__node:hover {
+  filter: brightness(1.1);
+}
+
+.react-flow__node.selected {
+  box-shadow: 0 0 0 3px rgba(246, 200, 76, 0.5) !important;
+}
+
+.react-flow__edge {
+  cursor: pointer;
+  transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #F6C84C !important;
+  stroke-width: 3px !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--accent) !important;
+  stroke-width: 4px !important;
+  filter: drop-shadow(0 0 6px rgba(246, 200, 76, 0.8));
+}
+
+.react-flow__edge.selected .react-flow__edge-markerend {
+  fill: var(--accent) !important;
+}
+
+.react-flow__handle {
+  width: 12px !important;
+  height: 12px !important;
+  border: 2px solid #fff !important;
+  transition: all 0.2s;
+}
+
+.react-flow__handle:hover {
+  width: 16px !important;
+  height: 16px !important;
+  background: var(--accent-2) !important;
+}
+
+/* Controls styling */
+.react-flow__controls {
+  background: rgba(36, 24, 16, 0.9);
+  border: 1px solid rgba(255, 138, 0, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.react-flow__controls-button {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 138, 0, 0.15) !important;
+  color: var(--white) !important;
+  transition: all 0.2s;
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(255, 138, 0, 0.2) !important;
+}
+
+.react-flow__controls-button svg {
+  fill: var(--white) !important;
+}
+
+/* MiniMap styling */
+.react-flow__minimap {
+  background: rgba(36, 24, 16, 0.9);
+  border: 1px solid rgba(255, 138, 0, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Info Panel */
+.info-panel {
+  background: rgba(36, 24, 16, 0.95);
+  border: 1px solid rgba(255, 138, 0, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  max-width: 250px;
+}
+
+.info-text {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.info-text strong {
+  color: var(--accent);
+}
+
+.info-text ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.info-text li {
+  margin: 4px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .flowchart-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .toolbar-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .shape-btn {
+    justify-content: flex-start;
+  }
+  
+  .add-node-btn {
+    width: 100%;
+  }
+  
+  .info-panel {
+    display: none; /* Hide tips on smaller screens */
+  }
+}
+
+/* Question Navigation Section */
+.question-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(36, 24, 16, 0.8), rgba(18, 14, 12, 0.8));
+  border: 1px solid rgba(255, 138, 0, 0.2);
+  border-radius: 8px;
+  margin: 0 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.nav-btn {
+  background: linear-gradient(135deg, rgba(255, 138, 0, 0.2), rgba(246, 200, 76, 0.1));
+  border: 1px solid rgba(255, 138, 0, 0.4);
+  color: var(--accent);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 138, 0, 0.3), rgba(246, 200, 76, 0.2));
+  border-color: rgba(255, 138, 0, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(255, 138, 0, 0.3);
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: rgba(100, 100, 100, 0.1);
+  border-color: rgba(100, 100, 100, 0.2);
+  color: var(--muted);
+}
+
+.question-display {
+  flex: 1;
+  padding: 0 12px;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.question-number {
+  color: var(--accent-2);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.question-indicators {
+  display: flex;
+  gap: 8px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.indicator:hover {
+  background: rgba(246, 200, 76, 0.5);
+  border-color: var(--accent);
+  transform: scale(1.2);
+}
+
+.indicator.active {
+  background: var(--accent);
+  border-color: var(--accent-2);
+  box-shadow: 0 0 8px rgba(246, 200, 76, 0.6);
+}
+
+.question-text {
+  color: var(--white);
+  font-size: 18px;
+  margin: 8px 0;
+  font-weight: 600;
+}
+
+.question-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .question-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .nav-btn {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .question-display {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .flowchart-container {
+    height: calc(100vh - 160px);
+  }
+  
+  .shape-label {
+    display: none; /* Show only icons on mobile */
+  }
+  
+  .toolbar-section {
+    flex-direction: row;
+  }
+}

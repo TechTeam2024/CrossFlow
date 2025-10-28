@@ -1,28 +1,59 @@
-import React, {useState, useEffect} from 'react'
-import Login from './Login'
-import Home from './Home'
-import users from '../users.json'
+import { useEffect, useState } from 'react'
+import './App.css'
+import Crossword from './components/Crossword'
+import Login from './components/Login'
+import Flowchart from './components/Flowchart'
 
-export default function App(){
-  const [user, setUser] = useState(()=> sessionStorage.getItem('currentUser'))
+function App() {
+    const [page, setPage] = useState('login') // default to login page
+    const [user, setUser] = useState(null)
 
-  useEffect(()=>{
-    // ensure users data loaded (it's imported statically)
-    if(!users || users.length === 0) console.warn('No users loaded')
-  },[])
+    useEffect(() => {
+        setUser(localStorage.getItem('user') || null)
+    }, [])
 
-  function handleLogin(username){
-    sessionStorage.setItem('currentUser', username)
-    setUser(username)
-  }
-  function handleLogout(){
-    sessionStorage.removeItem('currentUser')
-    setUser(null)
-  }
+    function handleLogin(username) {
+        localStorage.setItem('user', username);
+        setUser(username)
+        setPage('crossword') // default to crossword after login
+    }
 
-  return (
-    <div className="app-root">
-      {user ? <Home user={user} onLogout={handleLogout} /> : <Login users={users} onLogin={handleLogin} />}
-    </div>
-  )
+    function handleLogout() {
+        setUser(null)
+        localStorage.removeItem('user')
+        setPage('login')
+    }
+
+    return (
+        <div className="app-root">
+            <header className="app-header">
+                <h1 className="title">CrossFlow</h1>
+
+                {/* show tabs only after login */}
+                {user && (
+                    <nav className="app-nav">
+                        <button className={page === 'crossword' ? 'active' : ''} onClick={() => setPage('crossword')}>Crossword</button>
+                        <button className={page === 'flowchart' ? 'active' : ''} onClick={() => setPage('flowchart')}>Flowcharts</button>
+                        <div style={{ flex: 1 }} />
+                        <span className="user-badge">Signed in: <strong>{user}</strong></span>
+                        
+                    </nav>
+                )}
+            </header>
+
+            <main className="app-main">
+                {/* If not logged in, always show Login */}
+                {!user && (
+                    <Login onLogin={handleLogin} currentUser={user} onLogout={handleLogout} />
+                )}
+
+                {/* After login, show the selected page */}
+                {user && page === 'crossword' && <Crossword id={user}/>}
+
+                {user && page === 'flowchart' && <Flowchart />}
+            </main>
+        </div>
+    )
 }
+
+export default App

@@ -1,0 +1,35 @@
+/* Styles specific to the Login component. This file existed/imported by Login.jsx but was missing.
+   Keep rules scoped and lightweight — global layout rules remain in App.css. */
+
+.login-center {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px); /* allow header space */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-box {
+  width: 420px;
+  max-width: 96%;
+  padding: 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255,138,0,0.06);
+  box-sizing: border-box;
+}
+
+.centered-title { text-align:center; margin: 0 0 8px 0; }
+.login-form { display:flex; flex-direction:column; gap:10px; align-items:flex-start; width:100%; }
+.login-form label { display:flex; flex-direction:column; width:100%; font-size:14px; color:var(--muted); }
+.login-form input { padding:8px 10px; margin-top:8px; width:100%; box-sizing:border-box; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color:var(--white); border-radius:6px; }
+
+.form-actions { display:flex; justify-content:flex-end; width:100%; }
+.primary { background: var(--accent); color: #111; border: none; padding: 8px 12px; border-radius:6px; }
+.error { color: #ffb4b4; font-size: 14px; margin-top:6px; }
+
+@media (max-width: 520px) {
+  .login-box { width: 92%; padding: 16px; }
+}
