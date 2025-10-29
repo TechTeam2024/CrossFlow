@@ -3,7 +3,7 @@ import './App.css'
 import Crossword from './components/Crossword'
 import Login from './components/Login'
 import Flowchart from './components/Flowchart'
-import { getAuth, storeAuth, getCurrentUser } from './utils/auth'
+import { getAuth, storeAuth, getCurrentUser, clearAuth } from './utils/auth'
 
 function App() {
     const [page, setPage] = useState('crossword') // default page after login
@@ -25,6 +25,13 @@ function App() {
         storeAuth(userId)
         setUser(userId)
         setPage('crossword') // Navigate to crossword after login
+    }
+
+    function handleLogout() {
+        // Clear authentication data
+        clearAuth()
+        setUser(null)
+        setPage('login')
     }
 
     // Show loading state while checking authentication
@@ -77,6 +84,9 @@ function App() {
                             </svg>
                             {user}
                         </span>
+                        <button onClick={handleLogout} className="logout">
+                            Logout
+                        </button>
                     </nav>
                 )}
             </header>
