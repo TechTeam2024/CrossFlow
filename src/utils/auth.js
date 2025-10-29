@@ -4,9 +4,9 @@
 // Pre-generated access keys (hashed for security)
 // Format: { accessKey: userId }
 const VALID_ACCESS_KEYS = {
-  'CFK-2024-A1B2C3D4': 'temp1-11',
-  'CFK-2024-E5F6G7H8': 'temp4-2',
-  'CFK-2024-I9J0K1L2': 'temp2',
+  'ACCESS-123': 'temp1-11',
+  'ACCESS-456': 'temp4-2',
+  'ACCESS-789': 'temp2',
   'CFK-2024-M3N4O5P6': 'user-demo',
   'CFK-2024-Q7R8S9T0': 'test-user'
 }
