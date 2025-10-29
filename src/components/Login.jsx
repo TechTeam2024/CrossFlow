@@ -7,7 +7,7 @@ export default function Login({ onLogin, currentUser }) {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    function submit(e) {
+    async function submit(e) {
         e.preventDefault()
         setError('')
         setLoading(true)
@@ -18,21 +18,32 @@ export default function Login({ onLogin, currentUser }) {
             return
         }
 
-        // Validate the access key
-        const result = validateAccessKey(accessKey)
+        try {
+            // Validate the access key (now async with Supabase)
+            const result = await validateAccessKey(accessKey)
 
-        if (result.valid) {
-            // Mark the key as used
-            markAccessKeyAsUsed(accessKey)
-            
-            // Call the login handler
-            onLogin(result.userId)
-            
-            // Clear the form
-            setAccessKey('')
-            setError('')
-        } else {
-            setError(result.error)
+            if (result.valid) {
+                // Mark the key as used in Supabase
+                const marked = await markAccessKeyAsUsed(accessKey)
+                
+                if (!marked) {
+                    setError('Failed to validate access key. Please try again.')
+                    setLoading(false)
+                    return
+                }
+                
+                // Call the login handler
+                onLogin(result.userId)
+                
+                // Clear the form
+                setAccessKey('')
+                setError('')
+            } else {
+                setError(result.error)
+            }
+        } catch (err) {
+            console.error('Login error:', err)
+            setError('An error occurred. Please try again.')
         }
 
         setLoading(false)

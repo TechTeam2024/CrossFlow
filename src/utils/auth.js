@@ -1,26 +1,40 @@
-// Secure access key authentication system
-// In production, these would be validated against a backend API
-
-// Pre-generated access keys (hashed for security)
-// Format: { accessKey: userId }
-const VALID_ACCESS_KEYS = {
-  'ACCESS-123': 'temp1-11',
-  'ACCESS-456': 'temp4-2',
-  'ACCESS-789': 'temp2',
-  'CFK-2024-M3N4O5P6': 'user-demo',
-  'CFK-2024-Q7R8S9T0': 'test-user'
-}
+// Secure access key authentication system with Supabase backend
+import { supabase } from '../config/supabase'
 
 // LocalStorage keys
 const AUTH_STORAGE_KEY = 'crossflow_auth'
 const USER_STORAGE_KEY = 'crossflow_user'
 
 /**
- * Validates an access key and returns the associated user ID
- * @param {string} accessKey - The access key to validate
- * @returns {object} - { valid: boolean, userId: string | null, error: string | null }
+ * Generates a simple device fingerprint for tracking
+ * @returns {string} - Device fingerprint
  */
-export function validateAccessKey(accessKey) {
+function getDeviceFingerprint() {
+  const userAgent = navigator.userAgent
+  const language = navigator.language
+  const platform = navigator.platform
+  const screenResolution = `${screen.width}x${screen.height}`
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  
+  const fingerprint = `${userAgent}-${language}-${platform}-${screenResolution}-${timezone}`
+  
+  // Create a simple hash
+  let hash = 0
+  for (let i = 0; i < fingerprint.length; i++) {
+    const char = fingerprint.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // Convert to 32-bit integer
+  }
+  
+  return `device_${Math.abs(hash).toString(36)}`
+}
+
+/**
+ * Validates an access key against Supabase database
+ * @param {string} accessKey - The access key to validate
+ * @returns {Promise<object>} - { valid: boolean, userId: string | null, error: string | null }
+ */
+export async function validateAccessKey(accessKey) {
   if (!accessKey || typeof accessKey !== 'string') {
     return { valid: false, userId: null, error: 'Access key is required' }
   }
@@ -28,42 +42,66 @@ export function validateAccessKey(accessKey) {
   // Trim and normalize the access key
   const normalizedKey = accessKey.trim().toUpperCase()
 
-  // Check if the key exists and hasn't been used before
-  const userId = VALID_ACCESS_KEYS[normalizedKey]
-  
-  if (!userId) {
-    return { valid: false, userId: null, error: 'Invalid access key' }
-  }
-
-  // Check if this access key has already been used
-  const usedKeys = getUsedAccessKeys()
-  if (usedKeys.includes(normalizedKey)) {
-    return { valid: false, userId: null, error: 'This access key has already been used' }
-  }
-
-  return { valid: true, userId, error: null }
-}
-
-/**
- * Marks an access key as used
- * @param {string} accessKey - The access key to mark as used
- */
-export function markAccessKeyAsUsed(accessKey) {
-  const usedKeys = getUsedAccessKeys()
-  usedKeys.push(accessKey.trim().toUpperCase())
-  localStorage.setItem('crossflow_used_keys', JSON.stringify(usedKeys))
-}
-
-/**
- * Gets the list of used access keys
- * @returns {array} - Array of used access keys
- */
-function getUsedAccessKeys() {
   try {
-    const stored = localStorage.getItem('crossflow_used_keys')
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
+    // Query Supabase to check if the key exists
+    const { data, error } = await supabase
+      .from('access_keys')
+      .select('*')
+      .eq('key', normalizedKey)
+      .single()
+
+    if (error || !data) {
+      return { valid: false, userId: null, error: 'Invalid access key' }
+    }
+
+    // Check if the key has already been used
+    if (data.is_used) {
+      return { 
+        valid: false, 
+        userId: null, 
+        error: 'This access key has already been used' 
+      }
+    }
+
+    return { valid: true, userId: data.user_id, error: null }
+  } catch (err) {
+    console.error('Error validating access key:', err)
+    return { 
+      valid: false, 
+      userId: null, 
+      error: 'Unable to validate access key. Please try again.' 
+    }
+  }
+}
+
+/**
+ * Marks an access key as used in Supabase database
+ * @param {string} accessKey - The access key to mark as used
+ * @returns {Promise<boolean>} - Success status
+ */
+export async function markAccessKeyAsUsed(accessKey) {
+  const normalizedKey = accessKey.trim().toUpperCase()
+  const deviceFingerprint = getDeviceFingerprint()
+
+  try {
+    const { error } = await supabase
+      .from('access_keys')
+      .update({
+        is_used: true,
+        used_at: new Date().toISOString(),
+        used_by_device: deviceFingerprint
+      })
+      .eq('key', normalizedKey)
+
+    if (error) {
+      console.error('Error marking access key as used:', error)
+      return false
+    }
+
+    return true
+  } catch (err) {
+    console.error('Error marking access key as used:', err)
+    return false
   }
 }
 
