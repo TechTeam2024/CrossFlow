@@ -369,6 +369,86 @@ export const HexagonNode = memo(({ data, selected }) => (
   </div>
 ));
 
+// Text Node (no shape, just editable text)
+export const TextNode = memo(({ data }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [text, setText] = useState(data?.label || 'Double-click to edit');
+
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    if (data?.onLabelChange) {
+      data.onLabelChange(text);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleBlur();
+    }
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.stopPropagation();
+    }
+  };
+
+  return (
+    <div style={{
+      padding: '8px 12px',
+      minWidth: '120px',
+      minHeight: '30px',
+      background: 'transparent',
+      border: 'none',
+      borderRadius: '4px',
+      fontSize: '14px',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      color: '#f5f5f5',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'text',
+    }}>
+      {isEditing ? (
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          autoFocus
+          style={{
+            width: '100%',
+            minHeight: '30px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 138, 0, 0.3)',
+            borderRadius: '4px',
+            padding: '4px 8px',
+            color: '#f5f5f5',
+            fontSize: '14px',
+            fontFamily: 'inherit',
+            resize: 'both',
+            outline: 'none',
+          }}
+        />
+      ) : (
+        <div 
+          onDoubleClick={handleDoubleClick}
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >
+          {text}
+        </div>
+      )}
+    </div>
+  );
+});
+
 RectangleNode.displayName = 'RectangleNode';
 DiamondNode.displayName = 'DiamondNode';
 CircleNode.displayName = 'CircleNode';
@@ -376,3 +456,4 @@ ParallelogramNode.displayName = 'ParallelogramNode';
 CylinderNode.displayName = 'CylinderNode';
 DocumentNode.displayName = 'DocumentNode';
 HexagonNode.displayName = 'HexagonNode';
+TextNode.displayName = 'TextNode';

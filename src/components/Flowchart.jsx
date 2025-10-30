@@ -19,7 +19,7 @@ import {
   DiamondNode,
   CircleNode,
   ParallelogramNode,
-  
+  TextNode,
 } from './FlowchartNodes';
 
 const nodeTypes = {
@@ -27,6 +27,7 @@ const nodeTypes = {
   diamond: DiamondNode,
   circle: CircleNode,
   parallelogram: ParallelogramNode,
+  text: TextNode,
 };
 
 const initialNodes = [
@@ -414,7 +415,7 @@ export default function Flowchart() {
     { type: 'diamond', label: 'Decision', icon: '◆' },
     { type: 'circle', label: 'Start/End', icon: '●' },
     { type: 'parallelogram', label: 'Input/Output', icon: '▱' },
-    
+    { type: 'text', label: 'Text', icon: 'T' },
   ];
 
   return (
