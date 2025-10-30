@@ -130,7 +130,7 @@ html, body, #root {
 
 /* iframe container: wide and centered, iframe taller horizontally than vertically */
 .crossword-page {
-  min-height: 120vh; /* ensure crossword page is taller than viewport */
+  min-height: 100vh; /* ensure crossword page is taller than viewport */
   width: 100%;
   display: flex;
   flex-direction: column;
